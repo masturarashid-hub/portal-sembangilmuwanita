@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 6 — Kedut Selepas Bangun Tidur | SIW</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pink:#FF78AC; --pink-light:#FFCCE0; --pink-pale:#FFF0F6;
+    --teal:#A8D5E3; --teal-dark:#5BAFC8; --teal-pale:#EBF7FB;
+    --cream:#F2F0EA; --cream-dark:#E6E2D8;
+    --dark:#2C2420; --mid:#6B5B53; --white:#FFFFFF;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:"DM Sans",sans-serif; background:var(--cream); color:var(--dark); font-size:18px; line-height:1.75; }
+
+  .topbar { background:#2C1A22; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; }
+  .topbar a { color:var(--teal); text-decoration:none; font-size:13.5px; display:flex; align-items:center; gap:6px; }
+  .topbar a:hover { opacity:0.75; }
+  .topbar-brand { font-family:"Cormorant Garamond",serif; font-size:1.1rem; color:rgba(250,240,232,0.8); }
+
+  .hero {
+    background:linear-gradient(155deg,#2C1A22 0%,#3D2030 60%,#2A2C3A 100%);
+    padding:44px 24px 40px; position:relative; overflow:hidden;
+  }
+  .hero::before {
+    content:""; position:absolute; inset:0;
+    background:radial-gradient(ellipse at 10% 50%,rgba(255,120,172,0.18) 0%,transparent 55%),
+               radial-gradient(ellipse at 90% 40%,rgba(168,213,227,0.14) 0%,transparent 50%);
+  }
+  .hero-inner { position:relative; z-index:1; max-width:680px; margin:auto; }
+
+  .tag-row { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px; }
+  .tag { font-size:11px; font-weight:600; letter-spacing:2px; text-transform:uppercase; padding:5px 14px; border-radius:20px; }
+  .tag-series { background:rgba(255,120,172,0.18); color:var(--pink-light); border:1px solid rgba(255,120,172,0.35); }
+  .tag-wk { background:rgba(168,213,227,0.15); color:var(--teal); border:1px solid rgba(168,213,227,0.3); }
+
+  .hero-day { font-family:"Cormorant Garamond",serif; font-size:1rem; color:rgba(250,240,232,0.5); letter-spacing:3px; text-transform:uppercase; margin-bottom:10px; }
+  .hero h1 { font-family:"Cormorant Garamond",serif; font-size:clamp(1.9rem,6vw,3rem); font-weight:600; color:#FAF0E8; line-height:1.2; margin-bottom:18px; }
+  .hero h1 span { color:var(--pink); font-style:italic; }
+  .meta-row { display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+  .meta-item { font-size:13px; color:rgba(250,240,232,0.55); display:flex; align-items:center; gap:6px; }
+
+  .content-wrap { max-width:680px; margin:0 auto; padding:40px 20px 60px; }
+
+  .post-img { width:100%; border-radius:16px; overflow:hidden; margin:0 0 28px; box-shadow:0 4px 24px rgba(44,36,32,0.12); }
+  .post-img img { width:100%; height:auto; display:block; }
+
+  .para { font-size:18px; color:var(--dark); line-height:1.85; margin-bottom:14px; }
+  .para b { color:var(--pink); font-weight:600; }
+
+  .section-heading { display:flex; align-items:center; gap:10px; margin:28px 0 14px; }
+  .section-heading-text { font-family:"Cormorant Garamond",serif; font-size:1.5rem; font-weight:600; color:var(--dark); }
+
+  .bullet-wrap { margin:0 0 20px; padding:18px 20px; background:white; border-radius:14px; border-left:3px solid var(--pink); box-shadow:0 2px 12px rgba(44,36,32,0.05); }
+  .bullet-item { display:flex; gap:10px; align-items:flex-start; margin-bottom:11px; font-size:16px; color:var(--dark); line-height:1.75; }
+  .bullet-item:last-child { margin-bottom:0; }
+  .bullet-icon { font-size:15px; flex-shrink:0; margin-top:3px; }
+
+  .para-divider { height:1px; background:linear-gradient(to right,var(--pink-light),transparent); margin:28px 0; }
+
+  /* KESAN + REMEDI GRID */
+  .er-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:14px 0 24px; }
+  @media(max-width:480px){ .er-grid { grid-template-columns:1fr; } }
+  .er-card { background:white; border-radius:14px; padding:18px 18px; box-shadow:0 2px 12px rgba(44,36,32,0.06); }
+  .er-card-title { font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:12px; }
+  .er-card.kesan .er-card-title { color:#C0504A; }
+  .er-card.remedi .er-card-title { color:var(--teal-dark); }
+  .er-item { display:flex; gap:8px; align-items:flex-start; margin-bottom:9px; font-size:14px; color:var(--dark); line-height:1.6; }
+  .er-item:last-child { margin-bottom:0; }
+  .er-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; margin-top:6px; }
+  .kesan .er-dot { background:#C0504A; }
+  .remedi .er-dot { background:var(--teal-dark); }
+
+  /* INGREDIENT HIGHLIGHT */
+  .ingredient-note {
+    background:var(--teal-pale); border-radius:14px;
+    padding:16px 20px; margin:16px 0 24px;
+    border-left:3px solid var(--teal-dark);
+    font-size:14.5px; color:var(--dark); line-height:1.7;
+  }
+  .ingredient-note b { color:var(--teal-dark); }
+
+  .signature { margin-top:36px; padding:22px 24px; background:linear-gradient(135deg,var(--pink-pale),var(--teal-pale)); border-radius:16px; border-left:4px solid var(--pink); display:flex; align-items:center; gap:14px; }
+  .sig-icon { font-size:28px; }
+  .sig-name { font-family:"Cormorant Garamond",serif; font-size:1.15rem; font-weight:600; color:var(--dark); }
+  .sig-tagline { font-size:13px; color:var(--mid); }
+
+  .nav-bottom { max-width:680px; margin:0 auto 40px; padding:0 20px; display:flex; justify-content:space-between; align-items:center; gap:12px; }
+  .nav-btn { display:inline-flex; align-items:center; gap:8px; padding:12px 22px; border-radius:24px; font-size:14px; font-weight:600; text-decoration:none; transition:all 0.22s; }
+  .nav-back { background:white; color:var(--mid); border:1.5px solid var(--cream-dark); }
+  .nav-back:hover { border-color:var(--pink); color:var(--pink); }
+  .nav-next { background:var(--pink); color:white; box-shadow:0 4px 16px rgba(255,120,172,0.35); }
+  .nav-next:hover { background:#E8609A; transform:translateY(-2px); }
+
+  footer { background:#2C1A22; color:rgba(250,240,232,0.55); text-align:center; padding:32px 24px; font-size:14px; line-height:1.9; }
+  footer strong { color:rgba(250,240,232,0.9); }
+  .footer-copy { margin-top:14px; font-size:11px; opacity:0.4; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="siw-kulit-matang.html">← Kembali ke Siri Kulit Matang</a>
+  <span class="topbar-brand">🌹 SIW</span>
+</div>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="tag-row">
+      <span class="tag tag-series">30 Hari Siri Kulit Matang</span>
+      <span class="tag tag-wk">#wrinkleknowledge</span>
+    </div>
+    <div class="hero-day">Day 6 · Selasa, 3 Februari 2026</div>
+    <h1><span>Kedut</span> Selepas Bangun Tidur</h1>
+    <div class="meta-row">
+      <span class="meta-item">🌿 Mastura Rashid</span>
+      <span class="meta-item">⏱ 3 min baca</span>
+    </div>
+  </div>
+</div>
+
+<div class="content-wrap">
+
+  <p class="para">Pernah tak bangun pagi, tengok cermin, ada garis yang bersimpang siur di muka macam spider web? 😂</p>
+
+  <div class="post-img">
+    <img src="data:image/png;base64,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" alt="Sleep Lines — kedut tidur pada muka" loading="lazy">
+  </div>
+
+  <!-- APA NAMA KEDUT TU -->
+  <div class="section-heading">
+    <span>🌹</span>
+    <span class="section-heading-text">Apa Nama Kedut Tu?</span>
+  </div>
+
+  <p class="para">Itulah <b>kedut tidur</b> — terhasil bila struktur kulit kita tak cukup kuat nak spring back.</p>
+
+  <!-- MACAMANA BOLEH JADI -->
+  <div class="section-heading">
+    <span>🌹</span>
+    <span class="section-heading-text">Macamana Boleh Jadi?</span>
+  </div>
+
+  <div class="bullet-wrap">
+    <div class="bullet-item"><span class="bullet-icon">💧</span><span>Kulit nipis dan dehidrasi</span></div>
+    <div class="bullet-item"><span class="bullet-icon">🛡️</span><span>Barrier kulit lemah</span></div>
+    <div class="bullet-item"><span class="bullet-icon">😴</span><span>Posisi tidur yang sama setiap malam memberi tekanan berulang pada kulit</span></div>
+  </div>
+
+  <!-- MACAMANA JADI KEKAL -->
+  <div class="section-heading">
+    <span>🌹</span>
+    <span class="section-heading-text">Macamana Jadi Kekal?</span>
+  </div>
+
+  <p class="para">Bila kulit tak cukup anjal, lipatan dari tekanan luar jadi kekal lebih lama — dan lama-kelamaan, ia tak hilang langsung.</p>
+
+  <div class="para-divider"></div>
+
+  <!-- KESAN + REMEDI -->
+  <div class="er-grid">
+    <div class="er-card kesan">
+      <div class="er-card-title">⚠️ Kesan</div>
+      <div class="er-item"><span class="er-dot"></span><span>Garis sukar hilang</span></div>
+      <div class="er-item"><span class="er-dot"></span><span>Kulit nampak kusam</span></div>
+      <div class="er-item"><span class="er-dot"></span><span>Makeup senang crack</span></div>
+      <div class="er-item"><span class="er-dot"></span><span>Muka nampak puffy</span></div>
+      <div class="er-item"><span class="er-dot"></span><span>Bentuk muka boleh berubah</span></div>
+    </div>
+    <div class="er-card remedi">
+      <div class="er-card-title">✨ Remedi</div>
+      <div class="er-item"><span class="er-dot"></span><span>Minum air mineral yang cukup</span></div>
+      <div class="er-item"><span class="er-dot"></span><span>Diet tinggi omega-3</span></div>
+      <div class="er-item"><span class="er-dot"></span><span>Makan buah tinggi air — tembikai, timun, oren</span></div>
+      <div class="er-item"><span class="er-dot"></span><span>Guna skincare yang bantu kulit pegang air</span></div>
+    </div>
+  </div>
+
+  <div class="ingredient-note">
+    💧 Bahan seperti <b>Hyaluronate Crosspolymer</b> dan <b>Beta Glucan</b> bantu kulit lembap dan pegang air lebih lama — sokong keanjalan kulit dari dalam.
+  </div>
+
+  <div class="signature">
+    <span class="sig-icon">🌿</span>
+    <div>
+      <div class="sig-name">Mastura Rashid</div>
+      <div class="sig-tagline">Journey To Slow-aging Skin ❤️</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="nav-bottom">
+  <a href="siw-kulit-matang-day5.html" class="nav-btn nav-back">← Day 5</a>
+  <a href="siw-kulit-matang-day7.html" class="nav-btn nav-next">Day 7 →</a>
+</div>
+
+<footer>
+  <strong>🌹 Sembang Ilmu Wanita</strong><br>
+  Channel Kecantikan oleh <strong>Mastura Rashid · Zathura Herbs</strong>
+  <div class="footer-copy">© 2026 Zathura Herbs · Semua Hak Terpelihara</div>
+</footer>
+
+</body>
+</html>
