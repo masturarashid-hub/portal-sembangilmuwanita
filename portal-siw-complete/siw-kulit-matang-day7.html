@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 7 — Kedut Bila Hormon Kortisol Tinggi | SIW</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pink:#FF78AC; --pink-light:#FFCCE0; --pink-pale:#FFF0F6;
+    --teal:#A8D5E3; --teal-dark:#5BAFC8; --teal-pale:#EBF7FB;
+    --cream:#F2F0EA; --cream-dark:#E6E2D8;
+    --dark:#2C2420; --mid:#6B5B53; --white:#FFFFFF;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:"DM Sans",sans-serif; background:var(--cream); color:var(--dark); font-size:18px; line-height:1.75; }
+
+  .topbar { background:#2C1A22; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; }
+  .topbar a { color:var(--teal); text-decoration:none; font-size:13.5px; display:flex; align-items:center; gap:6px; }
+  .topbar a:hover { opacity:0.75; }
+  .topbar-brand { font-family:"Cormorant Garamond",serif; font-size:1.1rem; color:rgba(250,240,232,0.8); }
+
+  .hero {
+    background:linear-gradient(155deg,#2C1A22 0%,#3D2030 60%,#2A2C3A 100%);
+    padding:44px 24px 40px; position:relative; overflow:hidden;
+  }
+  .hero::before {
+    content:""; position:absolute; inset:0;
+    background:radial-gradient(ellipse at 10% 50%,rgba(255,120,172,0.18) 0%,transparent 55%),
+               radial-gradient(ellipse at 90% 40%,rgba(168,213,227,0.14) 0%,transparent 50%);
+  }
+  .hero-inner { position:relative; z-index:1; max-width:680px; margin:auto; }
+  .tag-row { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px; }
+  .tag { font-size:11px; font-weight:600; letter-spacing:2px; text-transform:uppercase; padding:5px 14px; border-radius:20px; }
+  .tag-series { background:rgba(255,120,172,0.18); color:var(--pink-light); border:1px solid rgba(255,120,172,0.35); }
+  .tag-wk { background:rgba(168,213,227,0.15); color:var(--teal); border:1px solid rgba(168,213,227,0.3); }
+  .hero-day { font-family:"Cormorant Garamond",serif; font-size:1rem; color:rgba(250,240,232,0.5); letter-spacing:3px; text-transform:uppercase; margin-bottom:10px; }
+  .hero h1 { font-family:"Cormorant Garamond",serif; font-size:clamp(1.9rem,6vw,3rem); font-weight:600; color:#FAF0E8; line-height:1.2; margin-bottom:18px; }
+  .hero h1 span { color:var(--pink); font-style:italic; }
+  .meta-row { display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+  .meta-item { font-size:13px; color:rgba(250,240,232,0.55); display:flex; align-items:center; gap:6px; }
+
+  .content-wrap { max-width:680px; margin:0 auto; padding:40px 20px 60px; }
+
+  /* BEFORE AFTER IMAGE */
+  .ba-wrap { position:relative; border-radius:16px; overflow:hidden; margin:0 0 10px; box-shadow:0 4px 24px rgba(44,36,32,0.12); }
+  .ba-wrap img { width:100%; height:auto; display:block; }
+  .ba-labels { display:grid; grid-template-columns:1fr 1fr; gap:0; margin-bottom:28px; }
+  .ba-label {
+    text-align:center; padding:8px 12px;
+    font-size:12.5px; font-weight:600; letter-spacing:0.5px;
+  }
+  .ba-label.bad { background:#F5E8E8; color:#C0504A; border-radius:0 0 0 12px; }
+  .ba-label.good { background:#E8F5F0; color:#2E7D50; border-radius:0 0 12px 0; }
+
+  .para { font-size:18px; color:var(--dark); line-height:1.85; margin-bottom:14px; }
+  .para b { color:var(--pink); font-weight:600; }
+
+  .section-heading { display:flex; align-items:center; gap:10px; margin:28px 0 14px; }
+  .section-heading-text { font-family:"Cormorant Garamond",serif; font-size:1.5rem; font-weight:600; color:var(--dark); }
+
+  /* CORTISOL TRIGGER LIST */
+  .trigger-wrap { background:white; border-radius:14px; padding:18px 20px; margin:0 0 20px; border-left:3px solid #C0504A; box-shadow:0 2px 12px rgba(44,36,32,0.05); }
+  .trigger-label { font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#C0504A; margin-bottom:12px; }
+  .trigger-item { display:flex; gap:10px; align-items:flex-start; margin-bottom:9px; font-size:15px; color:var(--dark); line-height:1.7; }
+  .trigger-item:last-child { margin-bottom:0; }
+  .trigger-icon { font-size:14px; flex-shrink:0; margin-top:3px; }
+
+  /* SKIN EFFECTS TAGS */
+  .skin-tags { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 24px; }
+  .skin-tag {
+    background:#FEF0F0; color:#C0504A;
+    border:1px solid #F5CCCC;
+    font-size:13px; font-weight:600;
+    padding:5px 14px; border-radius:20px;
+  }
+
+  /* STRESS MECHANISM */
+  .mechanism-box { background:white; border-radius:14px; padding:18px 20px; margin:14px 0 20px; box-shadow:0 2px 12px rgba(44,36,32,0.05); border-top:3px solid var(--pink); }
+  .mechanism-row { display:flex; align-items:flex-start; gap:12px; margin-bottom:12px; font-size:15px; color:var(--dark); line-height:1.7; }
+  .mechanism-row:last-child { margin-bottom:0; }
+  .mechanism-arrow { color:var(--pink); font-size:16px; flex-shrink:0; margin-top:3px; font-weight:700; }
+
+  .para-divider { height:1px; background:linear-gradient(to right,var(--pink-light),transparent); margin:28px 0; }
+
+  /* ER GRID */
+  .er-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:14px 0 20px; }
+  @media(max-width:480px){ .er-grid { grid-template-columns:1fr; } }
+  .er-card { background:white; border-radius:14px; padding:18px 18px; box-shadow:0 2px 12px rgba(44,36,32,0.06); }
+  .er-card-title { font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:12px; }
+  .er-card.kesan .er-card-title { color:#C0504A; }
+  .er-card.remedi .er-card-title { color:var(--teal-dark); }
+  .er-item { display:flex; gap:8px; align-items:flex-start; margin-bottom:9px; font-size:14px; color:var(--dark); line-height:1.6; }
+  .er-item:last-child { margin-bottom:0; }
+  .er-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; margin-top:6px; }
+  .kesan .er-dot { background:#C0504A; }
+  .remedi .er-dot { background:var(--teal-dark); }
+
+  /* SUPPLEMENT PILLS */
+  .supplement-wrap { margin:16px 0 24px; }
+  .supplement-label { font-size:12px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:var(--mid); margin-bottom:10px; }
+  .supplement-pills { display:flex; flex-wrap:wrap; gap:8px; }
+  .pill {
+    background:var(--teal-pale); color:var(--teal-dark);
+    border:1px solid var(--teal); font-size:13px; font-weight:600;
+    padding:5px 14px; border-radius:20px;
+  }
+
+  /* INGREDIENT NOTE */
+  .ingredient-note { background:var(--pink-pale); border-radius:14px; padding:16px 20px; margin:4px 0 24px; border-left:3px solid var(--pink); font-size:14.5px; color:var(--dark); line-height:1.7; }
+  .ingredient-note b { color:var(--pink); }
+
+  .signature { margin-top:36px; padding:22px 24px; background:linear-gradient(135deg,var(--pink-pale),var(--teal-pale)); border-radius:16px; border-left:4px solid var(--pink); display:flex; align-items:center; gap:14px; }
+  .sig-icon { font-size:28px; }
+  .sig-name { font-family:"Cormorant Garamond",serif; font-size:1.15rem; font-weight:600; color:var(--dark); }
+  .sig-tagline { font-size:13px; color:var(--mid); }
+
+  .nav-bottom { max-width:680px; margin:0 auto 40px; padding:0 20px; display:flex; justify-content:space-between; align-items:center; gap:12px; }
+  .nav-btn { display:inline-flex; align-items:center; gap:8px; padding:12px 22px; border-radius:24px; font-size:14px; font-weight:600; text-decoration:none; transition:all 0.22s; }
+  .nav-back { background:white; color:var(--mid); border:1.5px solid var(--cream-dark); }
+  .nav-back:hover { border-color:var(--pink); color:var(--pink); }
+  .nav-next { background:var(--pink); color:white; box-shadow:0 4px 16px rgba(255,120,172,0.35); }
+  .nav-next:hover { background:#E8609A; transform:translateY(-2px); }
+
+  footer { background:#2C1A22; color:rgba(250,240,232,0.55); text-align:center; padding:32px 24px; font-size:14px; line-height:1.9; }
+  footer strong { color:rgba(250,240,232,0.9); }
+  .footer-copy { margin-top:14px; font-size:11px; opacity:0.4; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="siw-kulit-matang.html">← Kembali ke Siri Kulit Matang</a>
+  <span class="topbar-brand">🌹 SIW</span>
+</div>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="tag-row">
+      <span class="tag tag-series">30 Hari Siri Kulit Matang</span>
+      <span class="tag tag-wk">#wrinkleknowledge</span>
+    </div>
+    <div class="hero-day">Day 7 · Khamis, 5 Februari 2026</div>
+    <h1>Kedut Bila <span>Hormon Kortisol</span> Tinggi</h1>
+    <div class="meta-row">
+      <span class="meta-item">🌿 Mastura Rashid</span>
+      <span class="meta-item">⏱ 4 min baca</span>
+    </div>
+  </div>
+</div>
+
+<div class="content-wrap">
+
+  <!-- BEFORE/AFTER IMAGE -->
+  <div class="ba-wrap">
+    <img src="data:image/jpeg;base64,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" alt="Perbandingan muka tinggi kortisol vs muka sihat" loading="lazy">
+  </div>
+  <div class="ba-labels">
+    <div class="ba-label bad">😰 Kiri: Tinggi Kortisol</div>
+    <div class="ba-label good">✨ Kanan: Muka Sihat</div>
+  </div>
+
+  <p class="para">Selalu kita fikir bila stress, dia cuma bagi kesan pada otak dan badan saja. Tapi tak okay. <b>Stress = hormon kortisol tinggi.</b> Dan hormon kortisol inilah yang akan rosakkan kulit perlahan-lahan dari dalam.</p>
+  <p class="para">Siapa perasan, kalau stress sangat-sangat, muka nampak bengkak (puffy)? Itu bukan coincidence. 👆</p>
+
+  <!-- PUNCA -->
+  <div class="section-heading">
+    <span>🌹</span>
+    <span class="section-heading-text">Punca Kortisol Tinggi</span>
+  </div>
+
+  <div class="trigger-wrap">
+    <div class="trigger-label">⚠️ Trigger Utama</div>
+    <div class="trigger-item"><span class="trigger-icon">🍚</span><span>Diet tinggi gula & carbs — nasi, kuih, mi, makanan bertepung, kek, air manis</span></div>
+    <div class="trigger-item"><span class="trigger-icon">🌙</span><span>Selalu tidur lewat</span></div>
+    <div class="trigger-item"><span class="trigger-icon">😓</span><span>Bad lifestyle secara keseluruhan</span></div>
+  </div>
+
+  <p class="para">Dan biasanya, kulit mereka yang tinggi kortisol akan jadi:</p>
+
+  <div class="skin-tags">
+    <span class="skin-tag">😣 Berjerawat</span>
+    <span class="skin-tag">🔍 Pori Besar</span>
+    <span class="skin-tag">💔 Kering Merekah</span>
+    <span class="skin-tag">🩹 Mudah Luka & Ekzema</span>
+    <span class="skin-tag">📉 Cepat Berkedut</span>
+  </div>
+
+  <!-- APA NAMA KEDUT TU -->
+  <div class="section-heading">
+    <span>🌹</span>
+    <span class="section-heading-text">Apa Nama Kedut Tu?</span>
+  </div>
+
+  <p class="para">Itulah <b>kedut stress</b> — terhasil sebab stress kronik yang buatkan otot muka sentiasa tegang tanpa sedar.</p>
+
+  <div class="mechanism-box">
+    <div class="mechanism-row">
+      <span class="mechanism-arrow">→</span>
+      <span>Hormon stress meningkat → <b>Kulit sukar pulih</b></span>
+    </div>
+    <div class="mechanism-row">
+      <span class="mechanism-arrow">→</span>
+      <span>Otot tak sempat relaks — asyik menegang je walaupun cuba rileks</span>
+    </div>
+    <div class="mechanism-row">
+      <span class="mechanism-arrow">→</span>
+      <span>Kulit yang sentiasa tegang <b>kehilangan keanjalan</b> secara perlahan-lahan</span>
+    </div>
+  </div>
+
+  <div class="para-divider"></div>
+
+  <!-- KESAN + REMEDI -->
+  <div class="er-grid">
+    <div class="er-card kesan">
+      <div class="er-card-title">⚠️ Kesan</div>
+      <div class="er-item"><span class="er-dot"></span><span>Wajah nampak letih walaupun dah tidur cukup</span></div>
+      <div class="er-item"><span class="er-dot"></span><span>Garis kedut cepat terbentuk</span></div>
+      <div class="er-item"><span class="er-dot"></span><span>Muka rasa keras — dahi nampak berkerut walaupun cuba rileks</span></div>
+    </div>
+    <div class="er-card remedi">
+      <div class="er-card-title">✨ Remedi</div>
+      <div class="er-item"><span class="er-dot"></span><span>Baiki diet, lifestyle dan habit harian</span></div>
+      <div class="er-item"><span class="er-dot"></span><span>Ambil supplement sokongan jika perlu</span></div>
+      <div class="er-item"><span class="er-dot"></span><span>Guna skincare dengan bahan soothing</span></div>
+    </div>
+  </div>
+
+  <!-- SUPPLEMENTS -->
+  <div class="supplement-wrap">
+    <div class="supplement-label">💊 Supplement Yang Membantu</div>
+    <div class="supplement-pills">
+      <span class="pill">Omega-3</span>
+      <span class="pill">Ashwagandha</span>
+      <span class="pill">Vitamin D</span>
+      <span class="pill">Vitamin C</span>
+      <span class="pill">Vitamin B Complex</span>
+      <span class="pill">Magnesium Glycinate</span>
+    </div>
+  </div>
+
+  <div class="ingredient-note">
+    🌿 Bahan soothing seperti <b>GABA</b> dan <b>Pegaga (Centella Asiatica)</b> sangat membantu menyokong keseimbangan ini — bantu kulit jadi lebih relaks dan pulih dengan lebih baik.
+  </div>
+
+  <div class="signature">
+    <span class="sig-icon">🌿</span>
+    <div>
+      <div class="sig-name">Mastura Rashid</div>
+      <div class="sig-tagline">Journey To Slow-aging Skin ❤️</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="nav-bottom">
+  <a href="siw-kulit-matang-day6.html" class="nav-btn nav-back">← Day 6</a>
+  <a href="siw-kulit-matang-day8.html" class="nav-btn nav-next">Day 8 →</a>
+</div>
+
+<footer>
+  <strong>🌹 Sembang Ilmu Wanita</strong><br>
+  Channel Kecantikan oleh <strong>Mastura Rashid · Zathura Herbs</strong>
+  <div class="footer-copy">© 2026 Zathura Herbs · Semua Hak Terpelihara</div>
+</footer>
+
+</body>
+</html>
